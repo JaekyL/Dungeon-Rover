@@ -33,13 +33,14 @@ namespace Aspects
 
             for (int i = 1; i < floorTiles.Length; i++)
             {
-                if (_random.ValueRW.Value.NextBool())
+                int rngDirection = _random.ValueRW.Value.NextInt(0, 4);
+
+                switch (rngDirection)
                 {
-                    tilePositions[i] = tilePositions[i -1] + new Vector3(floorTiles[i - 1] / 2f + floorTiles[i] / 2f, 0, 0);
-                }
-                else
-                {
-                    tilePositions[i] = tilePositions[i -1] + new Vector3(0, 0, floorTiles[i - 1] / 2f + floorTiles[i] / 2f);
+                    case 0: tilePositions[i] = tilePositions[i - 1] + new Vector3(floorTiles[i - 1] / 2f + floorTiles[i] / 2f, 0, 0); break;
+                    case 1: tilePositions[i] = tilePositions[i - 1] - new Vector3(floorTiles[i - 1] / 2f + floorTiles[i] / 2f, 0, 0); break;
+                    case 2: tilePositions[i] = tilePositions[i - 1] + new Vector3(0, 0, floorTiles[i - 1] / 2f + floorTiles[i] / 2f); break;
+                    case 3: tilePositions[i] = tilePositions[i - 1] - new Vector3(0, 0, floorTiles[i - 1] / 2f + floorTiles[i] / 2f); break;
                 }
             }
             

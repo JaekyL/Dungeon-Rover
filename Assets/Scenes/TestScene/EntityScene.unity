@@ -185,7 +185,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   floorPrefab: {fileID: 34971187469487227, guid: 44a7e6c095fcca04cb480006ee4631aa,
     type: 3}
-  randomSeed: 0
-  floorSize: {x: 10, y: 10}
+  randomSeed: 10
+  maxFloorTiles: 20
+  minFloorTileSize: 2
+  maxFloorTileSize: 7
   minStairs: 1
   maxStairs: 3
+  stairMargin: 1
