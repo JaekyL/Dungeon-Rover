@@ -49,7 +49,7 @@ internal partial struct TileGravitationSystem : ISystem
         {
             ECB = ecb.AsParallelWriter(),
             DeltaTime = SystemAPI.Time.DeltaTime,
-            Depth = SystemAPI.GetSingleton<DungeonConfig>().DungeonDepth
+            
             
         };
 

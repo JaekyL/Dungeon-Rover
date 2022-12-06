@@ -71,7 +71,7 @@ float HexTileDistanceFunction(float3 pos, float radius, float time)
     // combine even hex tiles and odd hex tiles
     float space = 0.1;
     float wave = 0.1;
-    float3 objectScale = GetScale() * 100;
+    float3 objectScale = GetScale() * float3(100,1,100);
     float height = objectScale.y * 0.5 - wave;
     float3 scale = objectScale * 0.5;
 

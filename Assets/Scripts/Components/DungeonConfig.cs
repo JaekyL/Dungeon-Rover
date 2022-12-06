@@ -6,5 +6,5 @@ using UnityEngine;
 internal struct DungeonConfig : IComponentData
 {
     public Entity TilePrefab;
-    public int DungeonDepth;
+    public float StartingPointFreeSpaceDistance;
 }

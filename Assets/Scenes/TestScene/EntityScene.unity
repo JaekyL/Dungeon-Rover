@@ -155,7 +155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 8360525329506294328, guid: 345044932f446c8489e3aeb265745b7d,
     type: 3}
-  dungeonDepth: 3
+  startingPointFreeSpaceDistance: 2
 --- !u!4 &110104160
 Transform:
   m_ObjectHideFlags: 0
@@ -186,9 +186,9 @@ MonoBehaviour:
   floorPrefab: {fileID: 34971187469487227, guid: 44a7e6c095fcca04cb480006ee4631aa,
     type: 3}
   randomSeed: 10
-  maxFloorTiles: 20
+  maxFloorTiles: 50
   minFloorTileSize: 2
-  maxFloorTileSize: 7
+  maxFloorTileSize: 5
   minStairs: 1
   maxStairs: 3
   stairMargin: 1

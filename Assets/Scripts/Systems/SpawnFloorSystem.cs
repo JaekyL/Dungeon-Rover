@@ -38,14 +38,14 @@ namespace Systems
             //Checking on Event Entity
             if(_query.ToComponentDataArray<NewFloor>(Allocator.Temp).Length == 0) return;
 
-            
             //Creating new Floor
             FloorConfig config = SystemAPI.GetSingleton<FloorConfig>();
             Entity configEntity = SystemAPI.GetSingletonEntity<FloorConfig>();
             FloorConfigAspect floorConfigAspect = SystemAPI.GetAspectRW<FloorConfigAspect>(configEntity);
 
             NativeArray<int> floorTiles = floorConfigAspect.GetRandomFloorTiles();
-            NativeArray<Vector3> tilePositions = floorConfigAspect.CalculateTilePositions(floorTiles);
+            NativeHashMap<int2, Vector3> grid;
+            NativeArray<Vector3> tilePositions = floorConfigAspect.GenerateFloorGrid(floorTiles, out grid);
 
             BeginSimulationEntityCommandBufferSystem.Singleton beginECBSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
             EntityCommandBuffer spawnECB = beginECBSingleton.CreateCommandBuffer(state.WorldUnmanaged);
@@ -57,11 +57,11 @@ namespace Systems
             }
 
             //CalculateFloorElementPositions
-            NativeArray<Vector3> floorElementPositions = floorConfigAspect.CalculateFloorElementPositions(tilePositions);
+            NativeHashMap<Vector3Int, int> floorElementPositions = floorConfigAspect.CalculateFloorElementPositions(tilePositions, floorTiles);
 
             //Creating New FloorTilesEvent
             Entity floorTilesEvent = spawnECB.CreateEntity();
-            spawnECB.AddComponent(floorTilesEvent, new NewFloorTiles(){Positions = floorElementPositions});
+            spawnECB.AddComponent(floorTilesEvent, new NewFloorTiles(){Positions = grid});
             
             //Destroying the Event Entity
             EndSimulationEntityCommandBufferSystem.Singleton endECBSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();

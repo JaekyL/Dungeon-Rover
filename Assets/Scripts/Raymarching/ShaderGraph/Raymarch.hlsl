@@ -56,13 +56,14 @@ void raymarch_hexTiles_float
 {
     float distance = HexTileDistanceFunction(rayOrigin, radius, time);
     float completeDistance = distance;
-    
+    result = color;
+
     for (int i = 0; i < steps; i++)
     {	        				
         if (distance < minDistance || completeDistance > maxDistance)
         {
             //result = min(completeDistance / i, i / (float)steps) + color; // differentShading
-            result = i / (float)steps + color;
+            result += lerp(i / (float)steps, color, backgroundColor);
             return;
         }
 

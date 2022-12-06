@@ -6,7 +6,7 @@ using UnityEngine;
 internal class DungeonConfigAuthoring : MonoBehaviour
 {
     public GameObject tilePrefab;
-    public int dungeonDepth;
+    public float startingPointFreeSpaceDistance;
     
 }
 
@@ -17,7 +17,7 @@ internal class DungeonConfigBaker : Baker<DungeonConfigAuthoring>
         AddComponent(new DungeonConfig
         {
             TilePrefab = GetEntity(authoring.tilePrefab),
-            DungeonDepth = authoring.dungeonDepth,
+            StartingPointFreeSpaceDistance = authoring.startingPointFreeSpaceDistance,
             
         });
     }
