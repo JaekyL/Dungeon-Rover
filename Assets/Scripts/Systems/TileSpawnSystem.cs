@@ -62,6 +62,18 @@ internal partial struct TileSpawnSystem : ISystem
                 
                 Entity entity = ecb.Instantiate(config.TilePrefab);
                 ecb.SetComponent(entity, new LocalTransform(){_Position = position.Value + Vector3.up * 0.55f, _Rotation = quaternion.identity, _Scale = 1f});
+                ecb.AddComponent<TileColor>(entity);
+
+                if (position.Value.x > 0)
+                {
+                    ecb.SetComponent(entity, new TileColor(){Value = new float4(config.TileStats[0].Value.Color.r, config.TileStats[0].Value.Color.g, config.TileStats[0].Value.Color.b, 1)});
+                }
+                else
+                {
+                    ecb.SetComponent(entity, new TileColor(){Value = new float4(config.TileStats[1].Value.Color.r, config.TileStats[1].Value.Color.g, config.TileStats[1].Value.Color.b, 1)});
+                }
+                
+                
             }
         }
 

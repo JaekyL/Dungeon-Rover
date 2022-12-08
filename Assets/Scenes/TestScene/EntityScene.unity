@@ -156,6 +156,9 @@ MonoBehaviour:
   tilePrefab: {fileID: 8360525329506294328, guid: 345044932f446c8489e3aeb265745b7d,
     type: 3}
   startingPointFreeSpaceDistance: 2
+  tileConfigs:
+  - {fileID: 11400000, guid: 642f8e0fd7bda74449682df53c65f62b, type: 2}
+  - {fileID: 11400000, guid: a8286f98128fe3b428216138ecde7e5a, type: 2}
 --- !u!4 &110104160
 Transform:
   m_ObjectHideFlags: 0

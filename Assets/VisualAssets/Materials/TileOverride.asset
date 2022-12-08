@@ -12,5 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c49a92ef1771844b9c93a4037158cd, type: 3}
   m_Name: TileOverride
   m_EditorClassIdentifier: 
-  overrideList: []
-  material: {fileID: 2100000, guid: b553a4b218a4ea6409765887d9065139, type: 2}
+  overrideList:
+  - name: _DeepColor
+    displayName: _DeepColor
+    shaderName: Assets/Scripts/Raymarching/ShaderGraph/URP_Tile_Raymarch.shadergraph
+    materialName: TileBase
+    type: 0
+    value: {x: 0.42452827, y: 0.12735844, z: 0, w: 1}
+    instanceOverride: 0
+  material: {fileID: 2100000, guid: bf15eb402c973854a8163b089139f389, type: 2}
