@@ -11,7 +11,7 @@ namespace Aspects
     {
         public readonly Entity Entity;
 
-        private readonly RefRW<RandomStairs> _random;
+        private readonly RefRW<RandomNumbers> _random;
         private readonly RefRO<FloorConfig> _floorConfig;
 
         public NativeArray<int> GetRandomFloorTiles()
@@ -133,28 +133,13 @@ namespace Aspects
                 foreach (KVPair<int2, float3> index in checkList)
                 {
                     grid.Add(index.Key, index.Value);
+                    //Debug.Log(index.Key + " | " + index.Value);
                 }
+                
                 tilePositions[i] = checkVector;
             }
                         
             return tilePositions;
-        }
-
-        public NativeHashMap<Vector3Int, int> CalculateFloorElementPositions(NativeArray<Vector3> tilePositions, NativeArray<int> floorSizes)
-        {
-            int elementAmount = 0;
-
-            foreach (int floorSize in floorSizes)
-            {
-                elementAmount += floorSize * floorSize;
-            }
-            
-            NativeHashMap<Vector3Int, int> floorElementPositions = new NativeHashMap<Vector3Int, int>(elementAmount, Allocator.Temp);
-
-            
-            
-            
-            return floorElementPositions;
         }
     }
 }

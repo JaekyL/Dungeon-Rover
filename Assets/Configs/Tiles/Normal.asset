@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 300cbb0a06c14aeeb9a85b53f8e10db0, type: 3}
-  m_Name: Copper
+  m_Name: Normal
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,9 +21,9 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  tileType: 1
+  tileType: 0
   tileBaseMaterial: {fileID: 2100000, guid: bf15eb402c973854a8163b089139f389, type: 2}
-  color: {r: 0.6320754, g: 0.51326597, b: 0.0023851432, a: 1}
-  randomWeight: 5
-  health: 2
-  hardness: 1
+  color: {r: 0.2924528, g: 0.23845662, b: 0.18871483, a: 1}
+  randomWeight: 10
+  health: 1
+  hardness: 0

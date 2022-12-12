@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Aspects;
 using Components;
+using Config;
 using Helper;
 using Unity.Burst;
 using Unity.Collections;
@@ -45,7 +46,9 @@ internal partial struct TileSpawnSystem : ISystem
         if(_query.ToComponentDataArray<NewFloorTiles>(Allocator.Temp).Length == 0) return;
         
         DungeonConfig config = SystemAPI.GetSingleton<DungeonConfig>();
-
+        Entity configEntity = SystemAPI.GetSingletonEntity<DungeonConfig>();
+        DungeonConfigAspect dungeonConfigAspect = SystemAPI.GetAspectRW<DungeonConfigAspect>(configEntity);
+        
         NativeArray<NewFloorTiles> newFloorTiles = _query.ToComponentDataArray<NewFloorTiles>(Allocator.Temp);
         BeginSimulationEntityCommandBufferSystem.Singleton ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
         EntityCommandBuffer ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
@@ -62,18 +65,17 @@ internal partial struct TileSpawnSystem : ISystem
                 
                 Entity entity = ecb.Instantiate(config.TilePrefab);
                 ecb.SetComponent(entity, new LocalTransform(){_Position = position.Value + Vector3.up * 0.55f, _Rotation = quaternion.identity, _Scale = 1f});
-                ecb.AddComponent<TileColor>(entity);
 
-                if (position.Value.x > 0)
-                {
-                    ecb.SetComponent(entity, new TileColor(){Value = new float4(config.TileStats[0].Value.Color.r, config.TileStats[0].Value.Color.g, config.TileStats[0].Value.Color.b, 1)});
-                }
-                else
-                {
-                    ecb.SetComponent(entity, new TileColor(){Value = new float4(config.TileStats[1].Value.Color.r, config.TileStats[1].Value.Color.g, config.TileStats[1].Value.Color.b, 1)});
-                }
+                TileStats stats = dungeonConfigAspect.GetRandomTile();
                 
+                ecb.AddComponent<TileColor>(entity);
+                ecb.SetComponent(entity, new TileColor(){Value = new float4(stats.Color.r, stats.Color.g, stats.Color.b, 1)});
                 
+                ecb.AddComponent<Health>(entity);
+                ecb.SetComponent(entity, new Health(){Value = stats.Health});
+                
+                ecb.AddComponent<Hardness>(entity);
+                ecb.SetComponent(entity, new Hardness(){Value = stats.Hardness});
             }
         }
 

@@ -25,7 +25,7 @@ public class TileDataEditor : OdinMenuEditorWindow
     {
         base.OnDestroy();
         
-        if(_createNewTileData != null) DestroyImmediate(_createNewTileData.config);
+        if(_createNewTileData != null) DestroyImmediate(_createNewTileData.Config);
     }
 
     protected override OdinMenuTree BuildMenuTree()
@@ -36,6 +36,7 @@ public class TileDataEditor : OdinMenuEditorWindow
         
         tree.Add("Create New", new CreateNewTileData());
         tree.AddAllAssetsAtPath("Tile Data", "Assets/Configs/Tiles", typeof(TileConfig));
+        tree.AddAllAssetsAtPathCombined("Tiles Overall", "Assets/Configs/Tiles", typeof(TileConfig)).SortMenuItemsByName();
         
         return tree;
     }
@@ -64,19 +65,22 @@ public class TileDataEditor : OdinMenuEditorWindow
     {
         public CreateNewTileData()
         {
-            config = ScriptableObject.CreateInstance<TileConfig>();
+            Config = CreateInstance<TileConfig>();
         }
         
         [InlineEditor(ObjectFieldMode = InlineEditorObjectFieldModes.Hidden)]
-        public TileConfig config;
-
+        public TileConfig Config;
+        public TileType Type;
+        
         [Button("Add New Enemy SO")]
         private void CreateNewData()
         {
-            AssetDatabase.CreateAsset(config, "Assets/Configs/Tiles/" + Enum.GetName(typeof(TileType),config.ToBlobAssetReference().Value.Type) + ".asset");
+            Debug.Log("Creating Assets with name: " + Enum.GetName(typeof(TileType),Type));
+            
+            AssetDatabase.CreateAsset(Config, "Assets/Configs/Tiles/" + Enum.GetName(typeof(TileType),Type) + ".asset");
             AssetDatabase.SaveAssets();
             
-            config = ScriptableObject.CreateInstance<TileConfig>();
+            Config = CreateInstance<TileConfig>();
         }
         
         

@@ -157,8 +157,12 @@ MonoBehaviour:
     type: 3}
   startingPointFreeSpaceDistance: 2
   tileConfigs:
-  - {fileID: 11400000, guid: 642f8e0fd7bda74449682df53c65f62b, type: 2}
+  - {fileID: 11400000, guid: dd3b8f434a3e74047b20de3cd47e7439, type: 2}
   - {fileID: 11400000, guid: a8286f98128fe3b428216138ecde7e5a, type: 2}
+  - {fileID: 11400000, guid: 01df13f34cc2bf04884a7fb9bbaff4b8, type: 2}
+  - {fileID: 11400000, guid: cc0c0172aedb8be4b91c212919961ad8, type: 2}
+  TileChances:
+  - 0
 --- !u!4 &110104160
 Transform:
   m_ObjectHideFlags: 0

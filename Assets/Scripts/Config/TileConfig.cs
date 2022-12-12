@@ -8,15 +8,39 @@ using UnityEngine;
 namespace Config
 {
     [CreateAssetMenu(menuName = "Game/TileConfig Asset", fileName = "TileConfig")]
+    [InlineEditor()]
     public class TileConfig : SerializedScriptableObject
     {
         public static Dictionary<string, BlobAssetReference<TileStats>> Allocations =
             new Dictionary<string, BlobAssetReference<TileStats>>();
-
-        [SerializeField] private TileType tileType;
-        [SerializeField] private Color color;
-        [SerializeField] private int health;
         
+        [BoxGroup("Type")]
+        [SerializeField] private TileType tileType;
+
+        [HorizontalGroup("Visuals", 75)]
+        [PreviewField(75)] 
+        [HideLabel]
+        [SerializeField] private Material tileBaseMaterial;
+        
+        [VerticalGroup("Visuals/Specifics")]
+        [LabelWidth(100)]
+        [SerializeField] private Color color;
+
+        [BoxGroup("Stats")]
+        [LabelWidth(100)]
+        [SerializeField] 
+        private int randomWeight;
+        
+        [BoxGroup("Stats")]
+        [LabelWidth(100)]
+        [SerializeField] 
+        private int health;
+        
+        [BoxGroup("Stats")]
+        [LabelWidth(100)]
+        [SerializeField] 
+        private int hardness;
+
         public BlobAssetReference<TileStats> ToBlobAssetReference()
         {
             if (Allocations.ContainsKey(this.name))
@@ -43,6 +67,14 @@ namespace Config
                         root.Health = health;
                     }
 
+                    {
+                        root.Hardness = hardness;
+                    }
+
+                    {
+                        root.Weight = randomWeight;
+                    }
+                    
                     tileStats = builder.CreateBlobAssetReference<TileStats>(Allocator.Persistent);
                     builder.Dispose();
                 }
@@ -60,5 +92,7 @@ namespace Config
         public TileType Type;
         public Color Color;
         public int Health;
+        public int Hardness;
+        public int Weight;
     }
 }

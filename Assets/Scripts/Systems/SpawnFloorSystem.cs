@@ -8,6 +8,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
+using Grid = Components.Grid;
 
 namespace Systems
 {
@@ -44,8 +45,7 @@ namespace Systems
             FloorConfigAspect floorConfigAspect = SystemAPI.GetAspectRW<FloorConfigAspect>(configEntity);
 
             NativeArray<int> floorTiles = floorConfigAspect.GetRandomFloorTiles();
-            NativeHashMap<int2, Vector3> grid;
-            NativeArray<Vector3> tilePositions = floorConfigAspect.GenerateFloorGrid(floorTiles, out grid);
+            NativeArray<Vector3> tilePositions = floorConfigAspect.GenerateFloorGrid(floorTiles, out NativeHashMap<int2, Vector3> grid);
 
             BeginSimulationEntityCommandBufferSystem.Singleton beginECBSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
             EntityCommandBuffer spawnECB = beginECBSingleton.CreateCommandBuffer(state.WorldUnmanaged);
@@ -56,9 +56,11 @@ namespace Systems
                 spawnECB.SetComponent(floorTile, new LocalTransform(){_Position = tilePositions[i], _Rotation = quaternion.Euler(math.radians(90),0,0), _Scale = floorTiles[i]});
             }
 
-            //CalculateFloorElementPositions
-            NativeHashMap<Vector3Int, int> floorElementPositions = floorConfigAspect.CalculateFloorElementPositions(tilePositions, floorTiles);
-
+            //Creating grid
+            Entity gridEntity = SystemAPI.GetSingletonEntity<Grid>();
+            GridAspect gridAspect = SystemAPI.GetAspectRW<GridAspect>(gridEntity);
+            gridAspect.CreateGrid(grid);
+            
             //Creating New FloorTilesEvent
             Entity floorTilesEvent = spawnECB.CreateEntity();
             spawnECB.AddComponent(floorTilesEvent, new NewFloorTiles(){Positions = grid});

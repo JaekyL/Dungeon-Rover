@@ -19,6 +19,7 @@ internal class DungeonConfigBaker : Baker<DungeonConfigAuthoring>
 {
     public override void Bake(DungeonConfigAuthoring authoring)
     {
+        //Generating TileStats for use in the ecs system
         NativeArray<BlobAssetReference<TileStats>> tileStats = new NativeArray<BlobAssetReference<TileStats>>(authoring.tileConfigs.Length, Allocator.Persistent);
 
         for (int i = 0; i < tileStats.Length; i++)
