@@ -2,9 +2,10 @@
 {
     public enum TileType 
     {
-        Normal = 0,
-        Copper = 1,
-        Silver = 2,
-        Gold = 3,
+        Empty = 0,
+        Normal = 1,
+        Copper = 2,
+        Silver = 3,
+        Gold = 4,
     }
 }

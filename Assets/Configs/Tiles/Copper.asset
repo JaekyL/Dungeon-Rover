@@ -21,9 +21,9 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  tileType: 1
+  tileType: 2
   tileBaseMaterial: {fileID: 2100000, guid: bf15eb402c973854a8163b089139f389, type: 2}
-  color: {r: 0.6320754, g: 0.51326597, b: 0.0023851432, a: 1}
-  randomWeight: 5
+  color: {r: 0.9056604, g: 0.3077642, b: 0.2682805, a: 1}
+  randomWeight: 4
   health: 2
   hardness: 1

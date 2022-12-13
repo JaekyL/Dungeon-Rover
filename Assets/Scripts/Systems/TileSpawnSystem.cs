@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +16,14 @@ using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Analytics;
 using Random = Unity.Mathematics.Random;
+using Grid = Components.Grid;
 
 [BurstCompile]
 [UpdateInGroup(typeof(InitializationSystemGroup))]
 internal partial struct TileSpawnSystem : ISystem
 {
     private EntityQuery _query;
+    private EntityQuery _playerQuery;
     private int _deepestFloor;
     
     [BurstCompile]
@@ -31,6 +34,10 @@ internal partial struct TileSpawnSystem : ISystem
         EntityQueryBuilder builder = new EntityQueryBuilder(Allocator.Temp);
         builder.WithAll<NewFloorTiles>();
         _query = state.GetEntityQuery(builder);
+
+        builder.Reset();
+        builder.WithAll<SpawnPlayer>();
+        _playerQuery = state.GetEntityQuery(builder);
     }
 
     [BurstCompile]
@@ -55,30 +62,60 @@ internal partial struct TileSpawnSystem : ISystem
 
         //Declaring startPosition to stop spawning for the starting area
         Vector3 startPosition = ArrayHelper.GetAveragePosition(newFloorTiles[0].Positions.GetValueArray(Allocator.Temp).ToArray());
+
+        NativeArray<Entity> playerEntity = _playerQuery.ToEntityArray(Allocator.Temp);
+
+        if (playerEntity.Length > 0)
+        {
+            ecb.AddComponent(playerEntity[0],new SpawnPosition
+            {
+                Value = startPosition
+            });
+        }
         
+        //Need GridAspect to update grid accordingly
+        Entity gridEntity = SystemAPI.GetSingletonEntity<Grid>();
+        GridAspect gridAspect = SystemAPI.GetAspectRW<GridAspect>(gridEntity);
+
+        NativeArray<int> tileTypes = new NativeArray<int>(Enum.GetValues(typeof(TileType)).Length, Allocator.Temp);
+
         //Creating "Breakable" DungeonParts
         foreach (NewFloorTiles newFloor in newFloorTiles)
         {
             foreach (KVPair<int2,Vector3> position in newFloor.Positions)
             {
-                if(Vector3.Distance(startPosition, position.Value) < config.StartingPointFreeSpaceDistance) continue;
-                
-                Entity entity = ecb.Instantiate(config.TilePrefab);
-                ecb.SetComponent(entity, new LocalTransform(){_Position = position.Value + Vector3.up * 0.55f, _Rotation = quaternion.identity, _Scale = 1f});
-
                 TileStats stats = dungeonConfigAspect.GetRandomTile();
                 
+                //Counting TileTypes for randomness Debugging
+                tileTypes[(int) stats.Type]++;
+                
+                if (stats.Type == TileType.Empty || Vector3.Distance(startPosition, position.Value) < config.StartingPointFreeSpaceDistance)
+                {
+                    gridAspect.UpdateGrid(position.Key, true);
+                    continue;
+                }
+
+                Entity entity = ecb.Instantiate(config.TilePrefab);
+                ecb.SetComponent(entity, new LocalTransform(){_Position = position.Value + Vector3.up * 0.55f, _Rotation = quaternion.identity, _Scale = 1f});
+                
                 ecb.AddComponent<TileColor>(entity);
-                ecb.SetComponent(entity, new TileColor(){Value = new float4(stats.Color.r, stats.Color.g, stats.Color.b, 1)});
+                ecb.SetComponent(entity, new TileColor()
+                {
+                    Value = new float4(stats.Color.r, stats.Color.g, stats.Color.b, 1)
+                });
+
+                ecb.AddComponent(entity, new Health(){Value = stats.Health});
                 
-                ecb.AddComponent<Health>(entity);
-                ecb.SetComponent(entity, new Health(){Value = stats.Health});
-                
-                ecb.AddComponent<Hardness>(entity);
-                ecb.SetComponent(entity, new Hardness(){Value = stats.Hardness});
+                ecb.AddComponent(entity, new Hardness(){Value = stats.Hardness});
             }
         }
 
+        //Debugging tileTypes can be removed, when its satisfying
+        for (int i = 0; i < tileTypes.Length; i++)
+        {
+            Debug.Log("Tile " + Enum.GetName(typeof(TileType), (TileType)i) + ": " + tileTypes[i]);
+        }
+        
         //Destroying the Event Entity
         EndSimulationEntityCommandBufferSystem.Singleton endECBSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
         EntityCommandBuffer endECB = endECBSingleton.CreateCommandBuffer(state.WorldUnmanaged);

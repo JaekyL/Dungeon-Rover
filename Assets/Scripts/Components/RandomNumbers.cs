@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Config;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
@@ -11,7 +12,9 @@ internal struct RandomNumbers : IComponentData
     public bool HasMaxTileWeight;
     public int MaxTileWeight;
     public NativeArray<int> TileWeights;
-    
+    public bool HasTileStatsList;
+    public NativeList<TileStats> TileStatsList;
+
     //FloorGeneration Values
     public bool SetMaxFloorWeight;
     public int MaxFloorWeight;
